@@ -11,7 +11,7 @@ import buttons
 import dbworker
 
 
-from yoomoney import Client
+from yoomoney import Client, Quickpay
 import threading
 import asyncio
 import subprocess
@@ -433,7 +433,7 @@ async def Buy_month(call: types.CallbackQuery):
     if payment_info is None:
         Month_count = int(str(call.data).split(":")[1])
         bill_id = f"{str(int(time.time() * 100))[4:]}-"f"{int(random.random() * 1000)}"
-        new_bill = yoomoney.Quickpay(sum=Month_count * CONFIG['one_month_cost'],
+        new_bill = Quickpay(sum=Month_count * CONFIG['one_month_cost'],
                                   label=f"Оплата-VPN-на-{Month_count}-мес.-для-пользователя-{call.from_user.id}-{bill_id}",
                                                paymentType="PC", targets="donation", quickpay_form="donate",
                                                receiver="4100118229124458")
