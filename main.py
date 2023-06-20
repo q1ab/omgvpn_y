@@ -262,7 +262,7 @@ async def Work_with_Message(m: types.Message):
         db = await aiosqlite.connect(DBCONNECT)
         await db.execute(f"INSERT INTO static_profiles (name) values (?)", (m.text,))
         await db.commit()
-        subprocess.call(f'./addusertovpn.sh {str(m.text)}', shell=True)
+        #subprocess.call(f'./addusertovpn.sh {str(m.text)}', shell=True)
         await bot.delete_state(m.from_user.id)
         await bot.send_message(m.from_user.id,
                                "Пользователь добавлен!", reply_markup=await buttons.admin_buttons_static_users())
@@ -461,7 +461,7 @@ async def AddTimeToUser(tgid, timetoadd):
         passdat = int(time.time()) + timetoadd
         await db.execute(f"Update userss set subscription = ?, banned=false, notion_oneday=false where tgid=?",
                          (str(int(time.time()) + timetoadd), userdat.tgid))
-        subprocess.call(f'./addusertovpn.sh {str(userdat.tgid)}', shell=True)
+        #subprocess.call(f'./addusertovpn.sh {str(userdat.tgid)}', shell=True)
         await bot.send_message(userdat.tgid, e.emojize(
             'Данные для входа были обновлены, скачайте новый файл авторизации через раздел "Как подключить :gear:"'))
     else:
@@ -538,7 +538,7 @@ def checkTime():
                     db = sqlite3.connect(DBCONNECT)
                     db.execute(f"UPDATE userss SET banned=true where tgid=?", (i[1],))
                     db.commit()
-                    subprocess.call(f'./deleteuserfromvpn.sh {str(i[1])}', shell=True)
+                    #subprocess.call(f'./deleteuserfromvpn.sh {str(i[1])}', shell=True)
 
                     dateto = datetime.utcfromtimestamp(int(i[1]) + CONFIG['UTC_time'] * 3600).strftime('%d.%m.%Y %H:%M')
                     Butt_main = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -594,7 +594,7 @@ def checkPayments():
                             db.execute(
                                 f"UPDATE userss SET subscription = ?, banned=false, notion_oneday=false where tgid=?",
                                 (str(int(time.time()) + i["time_to_add"]), i['tgid']))
-                            subprocess.call(f'./addusertovpn.sh {str(i["tgid"])}', shell=True)
+                            #subprocess.call(f'./addusertovpn.sh {str(i["tgid"])}', shell=True)
                             BotChecking.send_message(i['tgid'], e.emojize(
                                 'Данные для входа были обновлены, скачайте новый файл авторизации через раздел "Как подключить :gear:"'))
                         else:
