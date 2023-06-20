@@ -11,7 +11,6 @@ import buttons
 import dbworker
 
 
-from glQiwiApi import YooMoneyAPI
 from yoomoney import Client
 import threading
 import asyncio
@@ -434,16 +433,16 @@ async def Buy_month(call: types.CallbackQuery):
     if payment_info is None:
         Month_count = int(str(call.data).split(":")[1])
         bill_id = f"{str(int(time.time() * 100))[4:]}-"f"{int(random.random() * 1000)}"
-        new_bill = YooMoneyAPI.create_pay_form(amount=Month_count * CONFIG['one_month_cost'],
-                                  label=f"Оплата VPN на {Month_count} мес. для пользователя {call.from_user.id} {bill_id}",
-                                               payment_type="PC", targets="donation", quick_pay_form="donate",
+        new_bill = yoomoney.Quickpay(sum=Month_count * CONFIG['one_month_cost'],
+                                  label=f"Оплата-VPN-на-{Month_count}-мес.-для-пользователя-{call.from_user.id}-{bill_id}",
+                                               paymentType="PC", targets="donation", quickpay_form="donate",
                                                receiver="4100118229124458")
         await user_dat.NewPay(bill_id, Month_count * CONFIG['one_month_cost'], Month_count * 2592000, call.message.id,
-                              new_bill)
+                              new_bill.redirected_url)
 
         Butt_payment = types.InlineKeyboardMarkup()
         Butt_payment.add(
-            types.InlineKeyboardButton(e.emojize("Оплатить :money_bag:"), url=new_bill))
+            types.InlineKeyboardButton(e.emojize("Оплатить :money_bag:"), url=new_bill.redirected_url))
         Butt_payment.add(
             types.InlineKeyboardButton(e.emojize("Отменить платеж :cross_mark:"),
                                        callback_data=f'Cancel:' + str(user_dat.tgid)))
@@ -582,7 +581,7 @@ def checkPayments():
                 client = Client(token)
 
                 for i in log:
-                    if client.operation_history(label=f'Оплата VPN на 1 мес. для пользователя {i["tgid"]} {i["bill_id"]}').operations != []:
+                    if client.operation_history(label=f'Оплата-VPN-на-1-мес.-для-пользователя-{i["tgid"]}-{i["bill_id"]}').operations != []:
                         BotChecking = TeleBot(BOTAPIKEY)
 
                         db = sqlite3.connect(DBCONNECT)
