@@ -577,7 +577,7 @@ def checkPayments():
             db.close()
 
             if len(log) > 0:
-                token = CONFIG['yoomoney']
+                token = CONFIG['YOO-KEY']
                 client = Client(token)
 
                 for i in log:
