@@ -538,7 +538,7 @@ def checkTime():
                     db = sqlite3.connect(DBCONNECT)
                     db.execute(f"UPDATE userss SET banned=true where tgid=?", (i[1],))
                     db.commit()
-                    #subprocess.call(f'./deleteuserfromvpn.sh {str(i[1])}', shell=True)
+                    subprocess.call(f'./deleteuserfromvpn.sh {str(i[1])}', shell=True)
 
                     dateto = datetime.utcfromtimestamp(int(i[1]) + CONFIG['UTC_time'] * 3600).strftime('%d.%m.%Y %H:%M')
                     Butt_main = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -583,8 +583,6 @@ def checkPayments():
 
                 for i in log:
                     if client.operation_history(label=f'Оплата VPN на 1 мес. для пользователя {i["tgid"]} {i["bill_id"]}').operations != []:
-                        print('Yes')
-
                         BotChecking = TeleBot(BOTAPIKEY)
 
                         db = sqlite3.connect(DBCONNECT)
@@ -596,7 +594,7 @@ def checkPayments():
                             db.execute(
                                 f"UPDATE userss SET subscription = ?, banned=false, notion_oneday=false where tgid=?",
                                 (str(int(time.time()) + i["time_to_add"]), i['tgid']))
-                            #subprocess.call(f'./addusertovpn.sh {str(i["tgid"])}', shell=True)
+                            subprocess.call(f'./addusertovpn.sh {str(i["tgid"])}', shell=True)
                             BotChecking.send_message(i['tgid'], e.emojize(
                                 'Данные для входа были обновлены, скачайте новый файл авторизации через раздел "Как подключить :gear:"'))
                         else:
